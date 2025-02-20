@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -18,7 +19,7 @@ public class ConfiguracionSeguridad {
     private FiltroJWT filtroJWT;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
@@ -26,8 +27,10 @@ public class ConfiguracionSeguridad {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(filtroJWT, UsernamePasswordAuthenticationFilter.class); // Usamos el filtro inyectado
+                .addFilterBefore(filtroJWT, UsernamePasswordAuthenticationFilter.class)
+                .userDetailsService(userDetailsService); // Aquí se asigna el UserDetailsService personalizado
 
         return http.build();
     }
+
 }
