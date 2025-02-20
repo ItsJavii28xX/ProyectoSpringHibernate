@@ -3,6 +3,7 @@ package com.javijaime.demo.controller;
 import com.javijaime.demo.model.Cliente;
 import com.javijaime.demo.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.jetbrains.annotations.*;
 
@@ -15,32 +16,38 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping
     public List<Cliente> getAllClientes() {
         return clienteRepository.findAll();
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     public Cliente getClienteById(@NotNull @PathVariable Long id) {
         return clienteRepository.findById(id).orElse(null);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/nombre/{nombre}")
     public List<Cliente> getClientesByName(@NotNull @PathVariable String nombre) {
         return clienteRepository.findByNombre(nombre);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     public Cliente createCliente(@NotNull @RequestBody Cliente cliente) {
         return clienteRepository.save(cliente);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/{id}")
     public Cliente updateCliente(@NotNull @PathVariable Long id, @NotNull @RequestBody Cliente cliente) {
         cliente.setId(id);
         return clienteRepository.save(cliente);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{id}")
     public void deleteCliente(@NotNull @PathVariable Long id) {
         clienteRepository.deleteById(id);
