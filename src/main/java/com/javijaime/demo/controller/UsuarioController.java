@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -30,8 +32,8 @@ public class UsuarioController {
             String token = servicioAutenticacion.generarToken(usuario.getNombreUsuario());
 
             System.out.println(token);
+            System.out.println(Arrays.toString(servicioAutenticacion.getSecretKey().getEncoded()));
 
-            System.out.println(token);
             return new ResponseEntity<>(token, HttpStatus.OK);
         } else {
 
