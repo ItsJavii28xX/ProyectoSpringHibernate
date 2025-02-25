@@ -24,11 +24,13 @@ public class ConfiguracionSeguridad {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/usuarios/login").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(filtroJWT, UsernamePasswordAuthenticationFilter.class)
-                .userDetailsService(userDetailsService); // Aquí se asigna el UserDetailsService personalizado
+                .userDetailsService(userDetailsService);
 
         return http.build();
     }
